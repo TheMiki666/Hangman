@@ -1,5 +1,6 @@
 module Hangman
   class Dictionary
+    require 'colorize'
 
     def initialize
       @english_file = 'data/english_words.txt'
@@ -29,9 +30,9 @@ module Hangman
         end
         @words.uniq!
         file.close
-        puts "Dictionary loaded correctly"
+        puts "Dictionary loaded correctly".colorize(:green)
       rescue 
-        puts "LOAD ERROR"
+        puts "LOAD ERROR".colorize(:red)
         puts "It has been impossible read file #{@english_file}"
         puts "We have to use the emergency dictionary (with less words)"
         load_emergency_words
