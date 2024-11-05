@@ -11,12 +11,50 @@ module Hangman
       puts
     end
 
-    def complain
-      puts "That is not a valid character!".colorize(:yellow)
+    def greet
+      puts
+      puts "***********".colorize(:blue)
+      puts "* HANGMAN *".colorize(:blue)
+      puts "***********".colorize(:blue)
+      paint_hangman(0)
+      puts
+      puts "Press enter to start"
+    end
+
+    def start_round(tries)
+      puts "LET'S PLAY!".colorize(:green)
+      puts "Try to guess my secret word."
+      puts "You can only miss #{tries} times."
+      puts
+      paint_hangman(tries)
+    end
+
+    def complain (complaint)
+      puts complaint.colorize(:yellow)
     end
 
     def ask_for_letter
-      puts "What is your next letter?"
+      puts "What is your next letter? (type 'break' to quit the game)"
+    end
+
+    def victory
+      puts "You guessed the secret word!"
+      puts "YOU WIN!!".colorize(:green)
+      puts
+    end
+
+    def lose
+      puts "HANGED!".colorize(:red)
+      puts "You have no tries left!"
+      puts
+    end
+
+    def ask_for_another_round
+      puts ("Do you want to play another round (y/n)?")
+    end
+
+    def goodbye
+      puts "THANKS FOR PLAYING!"
     end
 
     def paint_hangman (fails_left)
