@@ -11,16 +11,25 @@ module Hangman
     WIN=1
     LOSE=2
     BREAK=3
-    SAVE_PATH="data/save.json"
+
+    # Languaje constants
+    ENGLISH = 0 # Languaje by default
+    SPANISH = 1
+
+    SAVE_PATH_ENGLISH="data/save_en.json"
+    SAVE_PATH_SPANISH="data/save_es.json"
 
     def initialize
       @sm=Hangman::ScreenManager.new
-      @dic=Hangman::Dictionary.new
       @am=Hangman::AlphabetManager.new
-      @dic.start
+
     end
     
     def start_game
+      @language = ask_for_language
+      @dic=Hangman::Dictionary.new(@language)
+      @am.add_letter('ñ') if @language==SPANISH
+      @dic.start
       @sm.greet
       gets.chomp
       loop do
@@ -31,12 +40,19 @@ module Hangman
     end
 
     private
+    def get_path
+      if @language==SPANISH
+        SAVE_PATH_SPANISH
+      else
+        SAVE_PATH_ENGLISH
+      end
+    end
 
     def save_game
       alpha=@am.export_alphabet
       serial=to_json(alpha)
       begin
-        file=File.open(SAVE_PATH, 'w')
+        file=File.open(get_path, 'w')
         file.write(serial)
         file.close
         @sm.ok_message("Game saved sucessfully.")
@@ -57,7 +73,7 @@ module Hangman
 
     def load_game
       begin
-        file=File.open(SAVE_PATH, 'r')
+        file=File.open(get_path, 'r')
         serial=file.read
         file.close
         alpha=from_json(serial)
@@ -142,6 +158,20 @@ module Hangman
 
     def show_info(char="")
       @sm.present_info(@am.guessed_word, @am.get_guessed_chars, @am.get_failed_chars, @am.tries_left, char)
+    end
+
+    def ask_for_language
+      response=""
+      loop do
+        @sm.ask_for_language
+        response=gets.chomp.downcase
+        break if response=='e' || response=='s'
+      end
+      if response=='s'
+        SPANISH
+      else
+        ENGLISH
+      end
     end
     
   end

@@ -64,6 +64,14 @@ module Hangman
       puts ("Do you want to play another round (y/n)?")
     end
 
+    def ask_for_language
+      puts "Do you want to play in English or in Spanish?"
+      puts "¿Quiéres jugar en inglés o en español?"
+      puts "E = English/inglés"
+      puts "S = Spanish/español"
+      puts "E/S?"
+    end
+
     def goodbye
       puts "THANKS FOR PLAYING!"
     end
