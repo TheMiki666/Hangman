@@ -1,5 +1,7 @@
 module Hangman
   class AlphabetManager
+    require_relative 'AlphabetManager/Alphabet'
+
       # Flags for the array @flags
       NOT_USED = 0
       IN_SECRET_WORD = 1
@@ -30,8 +32,7 @@ module Hangman
 
       def set_secret_word(word)
           @secret_word=word.downcase
-          @guessed_word=""
-          word.length.times{ @guessed_word.concat("_")}
+          prepare_guessed_word
       end
 
       def add_letter(char)
@@ -78,7 +79,7 @@ module Hangman
 
       def get_guessed_chars
           string=""
-          (0..@alphabet.length).each do |i|
+          (0..@alphabet.length-1).each do |i|
               string.concat(@alphabet[i]) if @flags[i]==IN_SECRET_WORD
           end
           string
@@ -86,11 +87,44 @@ module Hangman
 
       def get_failed_chars
           string=""
-          (0..@alphabet.length).each do |i|
+          (0..@alphabet.length-1).each do |i|
               string.concat(@alphabet[i]) if @flags[i]==NOT_IN_SECRET_WORD
           end
           string
       end
+
+      def export_alphabet
+        Hangman::Alphabet.new(@secret_word, @tries_left, @alphabet, @flags)
+      end
+
+      def import_alphabet(alphabet_object)
+        @secret_word=alphabet_object.secret_word
+        @tries_left=alphabet_object.tries_left
+        @alphabet=alphabet_object.alphabet
+        @flags=alphabet_object.flags
+
+        set_guessed_word
+      end
+
+      private
+
+      def set_guessed_word
+        prepare_guessed_word
+        (0..@alphabet.length-1).each do |i|
+          if @flags[i]==IN_SECRET_WORD
+            (0..@secret_word.length-1).each do |j|
+              @guessed_word[j]=@alphabet[i] if @secret_word[j]==@alphabet[i] 
+            end
+          end
+        end
+      end
+
+      def prepare_guessed_word
+        @guessed_word=""
+        @secret_word.length.times{ @guessed_word.concat("_")}
+      end
+
+
 
   end
 end

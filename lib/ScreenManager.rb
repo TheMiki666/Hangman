@@ -33,8 +33,17 @@ module Hangman
       puts complaint.colorize(:yellow)
     end
 
+    def ok_message(message)
+      puts message.colorize(:green)
+    end
+
+    def error_message(message)
+      puts message.colorize(:red)
+    end
+
     def ask_for_letter
-      puts "What is your next letter? (type 'break' to quit the game)"
+      puts "What is your next letter?" 
+      puts "(You can also type 'save', 'load' or 'break' the game)"
     end
 
     def victory
@@ -43,9 +52,11 @@ module Hangman
       puts
     end
 
-    def lose
+    def lose(word)
       puts "HANGED!".colorize(:red)
       puts "You have no tries left!"
+      print "The secret word was: "
+      puts word.colorize(:blue)
       puts
     end
 
