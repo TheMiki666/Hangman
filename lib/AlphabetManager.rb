@@ -1,3 +1,10 @@
+# This class controls the logic of the game
+# It stores the used alphabet (wich depends on the choosen language),
+# the secret word, the letters tried and the misses remaining
+# It has several methods to check and store a new letter, to check if the secret word is guessed,
+# if the are no tries left, etc.
+# It uses the class Alphabet to serialize and save on this its info
+
 module Hangman
   class AlphabetManager
     require_relative 'AlphabetManager/Alphabet'
@@ -22,6 +29,7 @@ module Hangman
           reset
       end
 
+      # Call this method when you start a new game
       def reset
           @secret_word=""
           @guessed_word=""
@@ -30,11 +38,14 @@ module Hangman
 
       end
 
+      # Stores the secret word
       def set_secret_word(word)
           @secret_word=word.downcase
           prepare_guessed_word
       end
 
+      # Add a letter to the allowed alphabet
+      # Use this method to add non english characters (when playing in other languages)
       def add_letter(char)
           if char.length == 1 && !@alphabet.include?(char)
                @alphabet.push(char.downcase)
@@ -42,10 +53,14 @@ module Hangman
           end
       end
 
+      # Returns true if the character is in the used alphabet
       def is_in_alphabet?(char)
           @alphabet.include?(char.downcase)
       end
 
+      # Returns true if the character has been used
+      # It also returns true if the character is not in the used alphabet
+      # In other words: when it returns false, it means that the player can use that letter
       def already_tried?(char)
           # If the caracter is not valid, we return true, to avoid trying this caracter
           return true if char.length !=1 || !is_in_alphabet?(char)
@@ -54,6 +69,9 @@ module Hangman
           @flags[@alphabet.find_index(char)]!=NOT_USED
       end
 
+      # Checks if the letter is in the secret word
+      # Returns true if the character is valid (belongs to the alphabet), not used and in the secret word
+      # Returns false otherwise
       def try_character(char)
           char=char.downcase
           return false if already_tried?(char)
@@ -73,10 +91,12 @@ module Hangman
           end
       end
 
+      # Returns true if the word is completly resolved
       def secret_word_guessed?
          secret_word.length>0 && !@guessed_word.include?("_")
       end
 
+      # Returns an string whit all the guessed letters 
       def get_guessed_chars
           string=""
           (0..@alphabet.length-1).each do |i|
@@ -85,6 +105,7 @@ module Hangman
           string
       end
 
+      # Returns an string whit all the failed letters 
       def get_failed_chars
           string=""
           (0..@alphabet.length-1).each do |i|
@@ -93,16 +114,19 @@ module Hangman
           string
       end
 
+      # Exports the intenal data (in an Alphabet object) to serialize and save it on disk
+      # Use this method on saving operations
       def export_alphabet
         Hangman::Alphabet.new(@secret_word, @tries_left, @alphabet, @flags)
       end
 
+      # Inports an Alphabt object, and changes all the internal data for the attributes of the object
+      # Use this method on loading operations
       def import_alphabet(alphabet_object)
         @secret_word=alphabet_object.secret_word
         @tries_left=alphabet_object.tries_left
         @alphabet=alphabet_object.alphabet
         @flags=alphabet_object.flags
-
         set_guessed_word
       end
 

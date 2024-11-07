@@ -1,3 +1,7 @@
+# The Game Manager is the main class
+# It controls the game flow, the player input and the save/load system
+# 
+
 module Hangman
   class GameManager
     require 'msgpack'
@@ -25,6 +29,7 @@ module Hangman
 
     end
     
+    # You have to call this method to start the whole game
     def start_game
       @language = ask_for_language
       @sm.language=@language

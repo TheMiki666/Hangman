@@ -1,3 +1,8 @@
+# This class reads all the words writen in a file (depending on the language),
+# filter them, keeps the filtered words in memory, and gives a word randomly
+# If it's not possible to read that file, it charges on memory a few emergency words, in order to be able to test (or play) the game 
+# When playing in Spanish, it removes the accents and umlaut of the vowels
+
 module Hangman
   class Dictionary
     require 'colorize'
@@ -17,10 +22,13 @@ module Hangman
       end
     end
 
+    # Makes the Dictionary load the words on memory
     def start
       load_words
     end
 
+    # Gives a random word
+    # The AphabetManager object have to call this method when needs a new secret word
     def get_random_word
       word=@words.sample
       if @language=SPANISH
@@ -31,6 +39,7 @@ module Hangman
 
     private
 
+    # Removes the accents and umlaut of the vowels when playing in Spanish
     def spanish_filter(word)
       (0..word.length-1).each do |i|
         case word[i]
@@ -68,7 +77,6 @@ module Hangman
         else
           puts "Dictionary loaded sucessfully.".colorize(:green)
         end
-        
       rescue 
         if @language==SPANISH
           puts "ERROR DE CARGA".colorize(:red)

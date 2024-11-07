@@ -1,3 +1,4 @@
+# This class controles the information showed on screen
 
 module Hangman
   class ScreenManager
@@ -13,6 +14,7 @@ module Hangman
       @language=language
     end
 
+    # Presents on screen the info of each turn
     def present_info (guessing_word, guessed_letters, failed_letters, tries_left, last_letter)
       present_guessing_word(guessing_word, last_letter)
       present_guessed_letters(guessed_letters)
@@ -21,6 +23,7 @@ module Hangman
       puts
     end
 
+    # Is the starting screen
     def greet
       puts
       if @language==SPANISH
@@ -38,9 +41,9 @@ module Hangman
         puts
         puts "Press enter to start."
       end
-
     end
 
+    # Announces a new round
     def start_round(tries)
       if @language==SPANISH
         puts "¡JUGEMOS!".colorize(:green)
@@ -55,18 +58,23 @@ module Hangman
       paint_hangman(tries)
     end
 
+    # Shows a complaining or warning message
     def complain (complaint)
       puts complaint.colorize(:yellow)
     end
 
+    # Shows an OK message
+    # (For example, after saving or loading)
     def ok_message(message)
       puts message.colorize(:green)
     end
 
+    # Shows that there was an error (specially when saving or loading)
     def error_message(message)
       puts message.colorize(:red)
     end
 
+    # Asks the player for a letter
     def ask_for_letter
       if @language==SPANISH
         puts "¿Cuál es tu próxima letra" 
@@ -77,6 +85,7 @@ module Hangman
       end
     end
 
+    # Announces the victory of the player
     def victory
       if @language==SPANISH
         puts "¡Adivinaste la palabra secreta!"
@@ -88,6 +97,7 @@ module Hangman
       puts
     end
 
+    # Announces the player has lost
     def lose(word)      
       if @language==SPANISH
         puts "¡AHORCADO!".colorize(:red)
@@ -102,15 +112,16 @@ module Hangman
       puts
     end
 
+    # Ask the player for another word
     def ask_for_another_round
       if @language==SPANISH
         puts "¿Quieres jugar otra ronda (y=sí/n=no)?"
       else
         puts "Do you want to play another round (y/n)?"
       end
-      
     end
 
+    # Aks for the game language
     def ask_for_language
       puts "Do you want to play in English or in Spanish?"
       puts "¿Quiéres jugar en inglés o en español?"
@@ -119,6 +130,7 @@ module Hangman
       puts "E/S?"
     end
 
+    # Says goodbye to the player at the end of the game
     def goodbye
       if @language==SPANISH
         puts "¡GRACIAS POR JUGAR!"
@@ -127,6 +139,7 @@ module Hangman
       end
     end
 
+    # Paints the hangman on screen, depending on the number of misses left
     def paint_hangman (fails_left)
       fails_left=0 if fails_left<0
       puts 
