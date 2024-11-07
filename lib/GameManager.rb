@@ -1,6 +1,6 @@
 module Hangman
   class GameManager
-    require 'json'
+    require 'msgpack'
     require_relative 'Dictionary'
     require_relative 'ScreenManager'
     require_relative 'AlphabetManager'
@@ -16,8 +16,8 @@ module Hangman
     ENGLISH = 0 # Languaje by default
     SPANISH = 1
 
-    SAVE_PATH_ENGLISH="data/save_en.json"
-    SAVE_PATH_SPANISH="data/save_es.json"
+    SAVE_PATH_ENGLISH="data/save_en.msg"
+    SAVE_PATH_SPANISH="data/save_es.msg"
 
     def initialize
       @sm=Hangman::ScreenManager.new
@@ -51,7 +51,7 @@ module Hangman
 
     def save_game
       alpha=@am.export_alphabet
-      serial=to_json(alpha)
+      serial=to_msg(alpha)
       begin
         file=File.open(get_path, 'w')
         file.write(serial)
@@ -73,8 +73,8 @@ module Hangman
       end
     end
 
-    def to_json(alpha)
-      JSON.dump({
+    def to_msg(alpha)
+      MessagePack.dump({
         :alphabet => alpha.alphabet,
         :flags => alpha.flags,
         :secret_word => alpha.secret_word,
@@ -87,7 +87,7 @@ module Hangman
         file=File.open(get_path, 'r')
         serial=file.read
         file.close
-        alpha=from_json(serial)
+        alpha=from_msg(serial)
         @am.import_alphabet(alpha)
         if @language==SPANISH
           @sm.ok_message "Juego cargado con éxito."
@@ -107,8 +107,8 @@ module Hangman
       end
     end
 
-    def from_json(serial)
-      data=JSON.load(serial)
+    def from_msg(serial)
+      data=MessagePack.load(serial)
       alpha=Hangman::Alphabet.new(data['secret_word'],data['tries_left'],data['alphabet'],data['flags'])
       alpha
     end
