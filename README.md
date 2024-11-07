@@ -20,3 +20,5 @@ You don’t need to draw an actual stick figure (though you can if you want to!)
 Every turn, allow the player to make a guess of a letter. It should be case insensitive. Update the display to reflect whether the letter was correct or incorrect. If out of guesses, the player should lose.
 Now implement the functionality where, at the start of any turn, instead of making a guess the player should also have the option to save the game. Remember what you learned about serializing objects… you can serialize your game class too!
 When the program first loads, add in an option that allows you to open one of your saved games, which should jump you exactly back to where you were when you saved. Play on!
+
+# RUBOCOP is not used this time (it can spoil the hangman drawing)
