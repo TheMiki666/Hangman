@@ -6,7 +6,7 @@ module Hangman
     ENGLISH_FILE='data/english_words.txt'
     SPANISH_FILE='data/spanish_words.txt'
 
-    def initialize (language)
+    def initialize (language=ENGLISH)
       @min_letters = 5
       @max_letters = 12
       @language=language
@@ -63,18 +63,34 @@ module Hangman
         end
         @words.uniq!
         file.close
-        puts "Dictionary loaded correctly".colorize(:green)
+        if @language==SPANISH
+          puts "Diccionario cargado con éxito.".colorize(:green)
+        else
+          puts "Dictionary loaded sucessfully.".colorize(:green)
+        end
+        
       rescue 
-        puts "LOAD ERROR".colorize(:red)
-        puts "It has been impossible read file #{data_file}"
-        puts "We have to use the emergency dictionary (with less words)"
+        if @language==SPANISH
+          puts "ERROR DE CARGA".colorize(:red)
+          puts "Ha sido imposible leer el fichero #{@data_file}."
+          puts "Tendremos que usar el diccionario de emergencia (con menos palabras)."
+        else
+          puts "LOAD ERROR".colorize(:red)
+          puts "It has been impossible read file #{@data_file}"
+          puts "We have to use the emergency dictionary (with less words)"
+        end
         load_emergency_words
       end
       
     end
 
     def load_emergency_words
-      @words=["community", "civilization", "awareness", "trooper", "centaur", "perforation", "reticent", "mortgage"]
+      if @language==SPANISH
+        @words=["leñador", "primitivo", "cientifico", "caspa", "lagartija", "embarazo", "reaccion", "estulto"]
+      else
+        @words=["community", "civilization", "awareness", "trooper", "centaur", "perforation", "reticent", "mortgage"]
+      end
+      
     end
 
   end

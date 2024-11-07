@@ -3,6 +3,16 @@ module Hangman
   class ScreenManager
     require 'colorize'
 
+    # Language constants
+    ENGLISH = 0 # Default language
+    SPANISH = 1
+
+    attr_accessor :language
+
+    def initialize(language=ENGLISH)
+      @language=language
+    end
+
     def present_info (guessing_word, guessed_letters, failed_letters, tries_left, last_letter)
       present_guessing_word(guessing_word, last_letter)
       present_guessed_letters(guessed_letters)
@@ -13,18 +23,34 @@ module Hangman
 
     def greet
       puts
-      puts "***********".colorize(:blue)
-      puts "* HANGMAN *".colorize(:blue)
-      puts "***********".colorize(:blue)
-      paint_hangman(0)
-      puts
-      puts "Press enter to start"
+      if @language==SPANISH
+        puts "************".colorize(:blue)
+        puts "* AHORCADO *".colorize(:blue)
+        puts "************".colorize(:blue)
+        paint_hangman(0)
+        puts
+        puts "Pulsa enter para empezar."
+      else
+        puts "***********".colorize(:blue)
+        puts "* HANGMAN *".colorize(:blue)
+        puts "***********".colorize(:blue)
+        paint_hangman(0)
+        puts
+        puts "Press enter to start."
+      end
+
     end
 
     def start_round(tries)
-      puts "LET'S PLAY!".colorize(:green)
-      puts "Try to guess my secret word."
-      puts "You can only miss #{tries} times."
+      if @language==SPANISH
+        puts "¡JUGEMOS!".colorize(:green)
+        puts "Intenta adivinar mi palabra secreta."
+        puts "Sólo puedes fallar #{tries} veces."
+      else
+        puts "LET'S PLAY!".colorize(:green)
+        puts "Try to guess my secret word."
+        puts "You can only miss #{tries} times."
+      end
       puts
       paint_hangman(tries)
     end
@@ -42,26 +68,47 @@ module Hangman
     end
 
     def ask_for_letter
-      puts "What is your next letter?" 
-      puts "(You can also type 'save', 'load' or 'break' the game)"
+      if @language==SPANISH
+        puts "¿Cuál es tu próxima letra" 
+        puts "(También puedes escribir 'save', 'load' or 'break' para grabar, cargar o salir del juego, respectivamente)."
+      else
+        puts "What is your next letter?" 
+        puts "(You can also type 'save', 'load' or 'break' the game)."
+      end
     end
 
     def victory
-      puts "You guessed the secret word!"
-      puts "YOU WIN!!".colorize(:green)
+      if @language==SPANISH
+        puts "¡Adivinaste la palabra secreta!"
+        puts "¡¡HAS GANADO!!".colorize(:green)
+      else
+        puts "You guessed the secret word!"
+        puts "YOU WIN!!".colorize(:green)
+      end
       puts
     end
 
-    def lose(word)
-      puts "HANGED!".colorize(:red)
-      puts "You have no tries left!"
-      print "The secret word was: "
+    def lose(word)      
+      if @language==SPANISH
+        puts "¡AHORCADO!".colorize(:red)
+        puts "¡No te quedan más intentos!"
+        print "La palabra secreta era: "
+      else
+        puts "HANGED!".colorize(:red)
+        puts "You have no tries left!"
+        print "The secret word was: "
+     end
       puts word.colorize(:blue)
       puts
     end
 
     def ask_for_another_round
-      puts ("Do you want to play another round (y/n)?")
+      if @language==SPANISH
+        puts "¿Quieres jugar otra ronda (y=sí/n=no)?"
+      else
+        puts "Do you want to play another round (y/n)?"
+      end
+      
     end
 
     def ask_for_language
@@ -73,7 +120,11 @@ module Hangman
     end
 
     def goodbye
-      puts "THANKS FOR PLAYING!"
+      if @language==SPANISH
+        puts "¡GRACIAS POR JUGAR!"
+      else
+        puts "THANKS FOR PLAYING!"
+      end
     end
 
     def paint_hangman (fails_left)
@@ -161,7 +212,11 @@ module Hangman
     end
 
     def present_tries_left (tries)
-      print "Tries left: "
+      if @language==SPANISH
+        print "Intentos restantes: "
+      else
+        print "Tries left: "
+      end
       case tries
       when 0
         color = :red

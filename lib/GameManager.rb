@@ -27,6 +27,7 @@ module Hangman
     
     def start_game
       @language = ask_for_language
+      @sm.language=@language
       @dic=Hangman::Dictionary.new(@language)
       @am.add_letter('ñ') if @language==SPANISH
       @dic.start
@@ -55,10 +56,20 @@ module Hangman
         file=File.open(get_path, 'w')
         file.write(serial)
         file.close
-        @sm.ok_message("Game saved sucessfully.")
+        if @language==SPANISH
+          @sm.ok_message("Juego guardado con éxito.")
+        else
+          @sm.ok_message("Game saved sucessfully.")
+        end
       rescue
-        @sm.error_message("Impossible to save the game!")
-        @sm.complain("Check write permissions of your Operative System.")
+        if @language==SPANISH
+          @sm.error_message("¡Ha sido imposible guardar el juego!")
+          @sm.complain("Comprueba los permisos de tu sistema operativo.")
+        else
+          @sm.error_message("Impossible to save the game!")
+          @sm.complain("Check write permissions of your Operative System.")
+        end
+ 
       end
     end
 
@@ -78,12 +89,21 @@ module Hangman
         file.close
         alpha=from_json(serial)
         @am.import_alphabet(alpha)
-        @sm.ok_message "Game loaded correctly."
+        if @language==SPANISH
+          @sm.ok_message "Juego cargado con éxito."
+        else
+          @sm.ok_message "Game loaded sucessfully."
+        end
         @sm.paint_hangman(@am.tries_left)
         show_info
       rescue
-        @sm.error_message "Game not loaded!"
-        @sm.complain "Check if a saved game exists"
+        if @language==SPANISH
+          @sm.error_message "¡El juego no ha sido cargado!"
+          @sm.complain "Comprueba que exista un juego grabado."
+        else
+          @sm.error_message "Game not loaded!"
+          @sm.complain "Check if a saved game exists."
+        end
       end
     end
 
@@ -140,13 +160,21 @@ module Hangman
         else
           char=char[0] if char.length >1
           if !@am.is_in_alphabet?(char)
-            @sm.complain("That's not a valid character!")
+            if @language==SPANISH
+              @sm.complain("¡Ese no es un caracter válido!")
+            else
+              @sm.complain("That's not a valid character!")
+            end
           elsif @am.already_tried?(char)
-            @sm.complain("That letter has been tried already.")
+            if @language==SPANISH
+              @sm.complain("Ye probaste antes esa letra.")
+            else
+              @sm.complain("That letter has been tried already.")
+            end
           else
             @am.try_character(char)
             @sm.paint_hangman(@am.tries_left)
-            show_info
+            show_info(char)
           end
         end
         status=WIN if @am.secret_word_guessed?
